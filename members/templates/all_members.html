@@ -1,0 +1,89 @@
+{% extends "master.html" %}
+
+{% block title %}
+    Physicians : List of Physicians 
+{% endblock %}
+
+{% block content %}
+<!-- <div class="mycard">
+
+    <h1>Physicians</h1>
+    <ul>
+      {% for x in mymembers %}
+        <li onclick="window.location = 'details/{{ x.id }}'">{{ x.firstname }} {{ x.lastname }}</li>
+      {% endfor %}
+    </ul>
+  </div> -->
+
+
+<div style="background-color: cornflowerblue;padding-top:5px; padding-bottom:5px;color:white;">
+    <table style="width:100%;"><tr><td style="width:30%;"></td><td style="width:40%;text-align:center"><h3>List of Physicians</h3></td><td style="widht:30%; text-align:center;"><button><a href="/add">Add New Physician</a></button></td></tr></table>
+   
+</div>
+<hr>
+
+<center>
+       <table class="blueTable" style="width:80%">
+           <thead>
+        <tr>
+            <th style="text-align:center">ID</th>
+            <th style="text-align:center">First Name</th>
+            <th style="text-align:center">Last Name</th>
+            <th style="text-align:center">Date of Joining</th>
+            <th style="text-align:center">Phone</th>
+            <th style="text-align:center">Specialization</th>
+            <th style="text-align:center;">Schedule</th>
+            <th style="text-align:center">Remark</th>
+            <th style="text-align:center">Action</th>
+        </tr>
+           </thead>
+        {% for x in mymembers %}
+        <tr>
+            <td style="text-align:center">{{ x.id }}</td>
+            <td>{{ x.firstname }}</td>
+            <td>{{ x.lastname }}</td>
+            <td>{{ x.joined_date }}</td>
+            <td>{{ x.phone }}</td>
+            <td>{{ x.specialization}}</td>
+            <td>{{x.schedule}}</td>
+            <td>{{x.remark}}</td>
+            <td><button class="delete-btn" data-physician-id="{{x.id}}">Delete</button></td>
+            
+        </tr>
+        {% endfor %}
+    </table>
+ <div class="pagination">
+        {% if mymembers.has_previous %}
+            <a href="?page={{ mymembers.previous_page_number }}">Previous</a>
+        {% endif %}
+
+        <span>Page {{ mymembers.number }} of {{ mymembers.paginator.num_pages }}</span>
+
+        {% if mymembers.has_next %}
+            <a href="?page={{ mymembers.next_page_number }}">Next</a>
+        {% endif %}
+    </div>
+    
+    
+{% endblock %}
+{% block message %}
+<script>
+    // Get all the delete buttons
+    const deleteButtons = document.querySelectorAll('.delete-btn');
+
+    deleteButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const physicianId = this.getAttribute('data-physician-id');
+            
+            // Confirm the delete action
+            const isConfirmed = confirm("Record will be deleted, permanently, are you sure? (y/n)");
+
+            if (isConfirmed) {
+                // Redirect to delete view
+                window.location.href = '/delete-physician/' + physicianId + '/';
+            }
+        });
+    });
+</script>
+    <hr>
+{% endblock %}

@@ -1,0 +1,93 @@
+{% extends 'master.html' %}
+{% block head %}
+<script>
+.container {
+    width: 50%;
+    margin: auto;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-title {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.appointment-details {
+    background: #eef;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 10px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.submit-btn:hover {
+    background: #0056b3;
+}
+</script>
+{% endblock %}
+{% block content %}
+<center><h2>Start Encounter for Appointment {{ appointment.id }}</h2>
+<form method="post" id="encounterForm" >
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save Encounter</button>
+</form>
+</center>
+<script>
+    document.getElementById("encounterForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+        const formData = new FormData(this);
+
+        fetch(window.location.href, {
+            method: "POST",
+            body: formData,
+            headers: {
+                "X-CSRFToken": "{{ csrf_token }}"
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message);
+                window.location.href = "{% url 'select_physician' %}";
+            } else {
+                alert("Error: " + JSON.stringify(data.errors));
+            }
+        })
+        .catch(error => console.error("Error:", error));
+    });
+</script>
+{% endblock %}
+{% block message %}
+
+{% endblock %}

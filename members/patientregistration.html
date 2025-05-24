@@ -1,0 +1,24 @@
+{% extends "master.html" %}
+<h1>News Physician Record</h1>
+{% block title %}
+<h1>Register New Physician</h1>
+{% endblock %}
+{% block content %}
+<center><h3>Register New Physician</h3></center>
+<hr>
+<div>
+<center>
+<form action="addrecord/" method="post">
+{% csrf_token %}
+First Name : <input name="first">
+<br>
+Last Name: <input name="last">
+<br>
+    
+<input type="submit" value="Submit">
+</form>
+</center>
+</div>
+{% endblock %}
+{% block message %}
+{% endblock %}

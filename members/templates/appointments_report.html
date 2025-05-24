@@ -1,0 +1,132 @@
+{% extends "master.html" %}
+
+{% block title %}
+    <title>Appointment Reports</title>
+{% endblock %}
+
+{% block content %}
+
+    <center>
+    <!-- Filter Form -->
+<div style="background-color:aliceblue;">
+<form method="GET">
+<table style="width:70%;border-collapse: collapse;">
+    <tr>
+        <td style="padding: 10px;text-align: left;">
+            <h3>Patient Appointment Reports</h3></td>
+        <td style="padding: 10px;text-align: left;"> 
+            <label for="date">Appointment Date:</label>
+            <br>
+            <input type="date" id="date" name="date" value="{{ date_filter }}" style="height:40px"></td>
+        <td style="padding: 10px;text-align: left;">
+            <label for="physician">Physician:</label>
+            <select id="physician" name="physician">
+                <option value="">All</option>
+                    {% for physician in physicians %}
+                        <option value="{{ physician.id }}" {% if physician.id|stringformat:"s" == physician_filter %}selected{% endif %}>
+                            {{ physician.firstname }} {{ physician.lastname }}
+                        </option>
+                    {% endfor %}
+            </select>
+         </td>
+         <td style="padding: 10px;text-align: left;"> 
+             <label for="patient">Patient:</label>
+            <select id="patient" name="patient">
+                <option value="">All</option>
+                {% for patient in patients %}
+                    <option value="{{ patient.id }}" {% if patient.id|stringformat:"s" == patient_filter %}selected{% endif %}>
+                        {{ patient.firstname }} {{ patient.lastname }}
+                    </option>
+                {% endfor %}
+            </select>
+        </td>
+        <td style="padding: 10px;text-align: left;">
+            <button type="submit">Filter</button>
+            <a href="{% url 'appointment_report' %}"> <button type="button">Reset</button></a>
+        </td>
+    </tr>
+    </table>
+    </form>
+</div>
+</center>
+<center>
+<div style="background-color:aliceblue;">
+    <table style="width:70%;border-collapse: collapse;">
+        <tr>
+            <td style="padding: 10px;text-align: right;">
+                <!-- Export Buttons -->
+                <form method="GET" action="{% url 'export_appointments_csv' %}">
+                <input type="hidden" name="date" value="{{ date_filter }}">
+                <input type="hidden" name="physician" value="{{ physician_filter }}">
+                <input type="hidden" name="patient" value="{{ patient_filter }}">
+                <button type="submit">Export CSV</button>
+                </form></td>
+            <td style="padding: 10px;text-align: left;">
+                <form method="GET" action="{% url 'export_appointments_pdf' %}">
+                <input type="hidden" name="date" value="{{ date_filter }}">
+                <input type="hidden" name="physician" value="{{ physician_filter }}">
+                <input type="hidden" name="patient" value="{{ patient_filter }}">
+                <button type="submit">Export PDF</button>
+                </form>
+            </td>
+        </tr>
+    </table>
+</div>
+</center>
+    <center>    
+    <table class="blueTable" style="width:80%">
+    <thead>
+        <tr>
+            <th style="text-align:center">Appointment ID</th>
+            <th style="text-align:center">Patient Name</th>
+            <th style="text-align:center">Physician Name</th>
+            <th style="text-align:center">Appointment Date</th>
+            <th style="text-align:center">Appointment Time</th>
+            <th style="text-align:center">Remark</th>
+            <th style="text-align:center">Encounter Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for appointment in appointments %}
+        <tr>
+            <td>{{ appointment.id }}</td>
+            <td>{{ appointment.patient.firstname }} {{ appointment.patient.lastname }}</td>
+            <td>{{ appointment.physician.firstname }} {{ appointment.physician.lastname }}</td>
+            <td>{{ appointment.date_of_appointment|date:"Y-m-d" }}</td>
+            <td>{{ appointment.time_of_appointment }}</td>
+            <td>{{ appointment.remark|default:"No remarks" }}</td>
+            <td>{% if appointment.encounter_status %}Completed{% else %}Pending{% endif %}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="7" style="text-align: center;">No records found</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<!-- Pagination Controls -->
+<div class="pagination">
+    <span class="step-links">
+        {% if appointments.has_previous %}
+            <a href="?page=1{% if date_filter %}&date={{ date_filter }}{% endif %}{% if physician_filter %}&physician={{ physician_filter }}{% endif %}{% if patient_filter %}&patient={{ patient_filter }}{% endif %}">&laquo; first</a>
+            <a href="?page={{ appointments.previous_page_number }}{% if date_filter %}&date={{ date_filter }}{% endif %}{% if physician_filter %}&physician={{ physician_filter }}{% endif %}{% if patient_filter %}&patient={{ patient_filter }}{% endif %}">previous</a>
+        {% endif %}
+        
+        <span class="current">
+            Page {{ appointments.number }} of {{ appointments.paginator.num_pages }}.
+        </span>
+
+        {% if appointments.has_next %}
+            <a href="?page={{ appointments.next_page_number }}{% if date_filter %}&date={{ date_filter }}{% endif %}{% if physician_filter %}&physician={{ physician_filter }}{% endif %}{% if patient_filter %}&patient={{ patient_filter }}{% endif %}">next</a>
+            <a href="?page={{ appointments.paginator.num_pages }}{% if date_filter %}&date={{ date_filter }}{% endif %}{% if physician_filter %}&physician={{ physician_filter }}{% endif %}{% if patient_filter %}&patient={{ patient_filter }}{% endif %}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+        </center>
+<hr>
+{% endblock %}
+{% block message %}
+
+
+{% endblock %}

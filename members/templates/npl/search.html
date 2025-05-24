@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Products</title>
+</head>
+<body>
+    <h1>Search Products</h1>
+    <form method="POST">
+        {% csrf_token %}
+        <input type="text" name="query" placeholder="Enter your search text" size="50">
+        <button type="submit">Search</button>
+    </form>
+
+    {% if query %}
+        <h2>Results for "{{ query }}"</h2>
+        {% if results %}
+            <ul>
+                {% for product in results %}
+                    <li>
+                        <strong>{{ product.name }}</strong>: {{ product.description }} (${{ product.price }})
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No matching products found.</p>
+        {% endif %}
+    {% endif %}
+</body>
+</html>

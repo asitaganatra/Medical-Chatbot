@@ -1,0 +1,16 @@
+{% extends 'master.html' %}
+{% block content %}
+<center><h2>Physician - Patient Encounter </h2>
+
+<table style="text-align:center;background-color: cornflowerblue;padding-top:5px; padding-bottom:5px;color:white;width:50%;">
+<tr><td>
+<form method="get" action="">
+    <label for="physician">Choose a Physician:</label>
+    <select id="physician" name="physician" onchange="location = this.value;">
+        <option value="">-- Select --</option>
+        {% for physician in physicians %}
+            <option value="{% url 'select_appointment' physician.id %}">{{ physician.firstname }} {{ physician.lastname }}</option>
+        {% endfor %}
+    </select>
+</form></td></tr></table></center>
+{% endblock %}

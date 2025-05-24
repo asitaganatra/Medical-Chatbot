@@ -1,0 +1,62 @@
+
+{% extends "master.html" %}
+<h1>Search Information</h1>
+{% block title %}
+<h1>Search Information</h1>
+{% endblock %}
+{% block content %}
+<div style="background-color: cornflowerblue;padding-top:5px; padding-bottom:5px;color:white;">
+    <table style="width:100%;"><tr><td style="text-align:center"><h3>NLP Enabled Chatbot</h3></td></tr></table>
+   
+</div>
+    <form method="POST">
+        {% csrf_token %}
+        <center>
+            
+            <table>
+                
+                <tr><td style="width:50%;"><input type="text" name="query" placeholder="Enter your search text"></td>
+                
+            <td>
+            <input type="radio" name="search_method" id="search_option1" value="Loose" checked>
+        <label for="search_option1">Loose Chat</label>
+        <input type="radio" name="search_method" id="search_option2" value="Strick">
+                <label for="search_option2">Strick Chat</label>
+                <button type="submit">Search</button></td></tr>
+            
+                
+            
+     </table>
+    </center>
+    </form>
+
+    {% if query %}
+      <!--  <h2>Results for "{{ query }}"</h2> -->
+        {% if results %}
+        <center>
+            <div style="width:70%;">
+            <ul>
+                {% for product in results %}
+                    <li>
+                        <strong>{{product.answer}}</strong>
+                        
+                        #<strong>{{ product.name }}</strong>: {{ product.description }} (${{ product.price }})
+                    </li>
+                
+                {% endfor %}
+            </ul>
+            </div>
+</center>
+        {% else %}
+<center><p>Sorry, I do not have any answer for this question..</p></center>
+        {% endif %}
+    {% endif %}
+
+{%endblock %}
+    
+{% block message %}
+
+{% endblock %}
+
+  
+    

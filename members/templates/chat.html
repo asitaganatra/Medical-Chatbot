@@ -1,0 +1,49 @@
+{% extends "master.html" %}
+{% block title %}
+<h1>My members</h1>
+{% endblock %}
+
+{% block content %}
+    <div class="main">
+        <h1>Speech Enabled Chatbot</h1>
+    </div>
+<center>
+<div>
+
+<h1>Speech Recognized Chatbot</h1>
+    <button onclick="startListening()">🎤 Speak</button>
+    <p><strong>User:</strong> <span id="user-text"></span></p>
+    <p><strong>Chatbot:</strong> <span id="chatbot-text"></span></p>
+
+    <script>
+        function startListening() {
+            const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.lang = "en-US";
+            recognition.start();
+
+            recognition.onresult = function(event) {
+                const userText = event.results[0][0].transcript;
+                document.getElementById("user-text").innerText = userText;
+                getResponse(userText);
+            };
+        }
+
+        function getResponse(userText) {
+            fetch(`/chatbot/chat/?question=${userText}`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("chatbot-text").innerText = data.answer;
+                speakResponse(data.answer);
+            });
+        }
+
+        function speakResponse(text) {
+            const synth = window.speechSynthesis;
+            const utterance = new SpeechSynthesisUtterance(text);
+            synth.speak(utterance);
+        }
+    </script>
+
+</div>
+</center>
+{% endblock %}

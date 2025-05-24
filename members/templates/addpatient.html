@@ -1,0 +1,217 @@
+{% extends "master.html" %}
+<h1>New Patient Record</h1>
+
+{% block title %}
+<h1>Patient Registration</h1>
+{% endblock %}
+
+{% block content %}
+<div style="background-color: cornflowerblue; padding-top:5px; padding-bottom:5px; color:white;">
+    <table style="width:100%;">
+        <tr>
+            <td style="width:30%;"></td>
+            <td style="width:40%;text-align:center"><h3>Register Patient</h3></td>
+            <td style="width:30%; text-align:center;">
+                <button><a href="/patients">List of Patients</a></button>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<hr>
+
+<div style="border:3px; border-color:darkgray;padding-bottom:150px;">
+<center>
+    
+<form id="patientForm" action="addpatientrecord/" method="post" onsubmit="return validateForm()">
+{% csrf_token %}
+<table class="blueTable" border='1' cellspacing='0' cellpadding='2px' style="vertical-align: middle; width:50%;">
+    <tr>
+        <td style="text-align:right; vertical-align:middle; width:30%;">First Name:</td>
+        <td style="vertical-align:middle; width:70%;">
+           <div style="display: flex; align-items: center;">
+            <input name="firstname1" id="firstname1" style="height:30px;width:90%;" placeholder="Enter First Name">
+            <button type="button" onclick="startListening('firstname1')">🎤</button>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td style="text-align:right; vertical-align:middle;">Last Name:</td>
+        <td style="vertical-align:middle; width:70%;">
+           <div style="display: flex; align-items: center;">
+            <input name="lastname1" id="lastname1" style="height:30px;width:90%;" placeholder="Enter Last Name">
+            <button type="button" onclick="startListening('lastname1')">🎤</button>
+            </div>   
+        </td>
+    </tr>
+    <tr>
+        <td style="text-align:right; vertical-align:middle;">Date of Birth:</td>
+        <td style="vertical-align:middle;width:70%;">
+        <div style="display: flex; align-items: center;">
+            <input name="dob1" type="date" id="dob1" style="height:30px;width:90%;" placeholder="YYYY-MM-DD">
+            <button type="button" onclick="startListening('dob1')">🎤</button>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td style="text-align:right; vertical-align:middle;">Address:</td>
+        <td style="vertical-align:middle;width:70%;">
+        <div style="display: flex; align-items: center;">
+            <input name="add1" id="add1" style="height:30px;width:90%;" placeholder="Enter Address">
+            <button type="button" onclick="startListening('add1')">🎤</button>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td style="text-align:right; vertical-align:middle;">Phone No.:</td>
+        <td style="vertical-align:middle;width:70%;">
+           <div style="display: flex; align-items: center;">
+            <input name="phone1" id="phone1" style="height:30px;width:90%;" placeholder="Enter 10 digit Phone Number">
+            <button type="button" onclick="startListening('phone1')">🎤</button>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td style="text-align:right; vertical-align:middle;">Gender:</td>
+        <td style="vertical-align:middle;">
+        <div style="display: flex; align-items: center;">
+            <select name="gender1" id="gender1" style="width:90%;">
+                <option value="">Select Gender</option>
+                <option value="Male">Male</option>    
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+            </select>
+            <button type="button" onclick="startListeningForGender()">🎤</button>
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td style="text-align:center;" colspan="2">
+            <input type="submit" value="Submit">
+        </td>
+    </tr>
+</table>
+</form>
+</center>
+</div>
+
+<!-- Speech recognition and form handling -->
+<script>
+// Setup Speech Recognition
+var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+var recognition = new SpeechRecognition();
+recognition.lang = 'en-US';
+recognition.interimResults = false;
+recognition.maxAlternatives = 1;
+
+function startListening(fieldId) {
+    console.log("Starting speech recognition...");
+    recognition.start();
+    
+    recognition.onresult = function(event) {
+        var speechResult = event.results[0][0].transcript;
+        console.log("Recognized speech: " + speechResult);  // Debugging log
+        document.getElementById(fieldId).value = speechResult;
+    };
+
+    recognition.onerror = function(event) {
+        console.error('Speech recognition error', event.error);
+    };
+}
+
+// For gender field (select dropdown)
+function startListeningForGender() {
+    recognition.start();
+    recognition.onresult = function(event) {
+        var genderSpeech = event.results[0][0].transcript.toLowerCase();
+        console.log("Recognized gender: " + genderSpeech);  // Debugging log
+        var genderSelect = document.getElementById('gender1');
+        if (genderSpeech.includes('male')) {
+            genderSelect.value = 'Male';
+        } else if (genderSpeech.includes('female')) {
+            genderSelect.value = 'Female';
+        } else if (genderSpeech.includes('other')) {
+            genderSelect.value = 'Other';
+        } else {
+            alert('Could not recognize gender. Please say "Male", "Female" or "Other".');
+        }
+    };
+
+    recognition.onerror = function(event) {
+        console.error('Speech recognition error', event.error);
+    };
+}
+
+// Basic validation for required fields
+function validateForm() {
+    var firstName = document.getElementById('firstname1').value.trim();
+    var lastName = document.getElementById('lastname1').value.trim();
+    var dob = document.getElementById('dob1').value.trim();
+    var phone = document.getElementById('phone1').value.trim();
+    var gender=document.getElementById("gender1").value.trim();
+    
+    // Remove spaces from phone number
+    phone = phone.replace(/\s+/g, '');
+
+    // Update the phone field with the trimmed value
+    document.getElementById('phone1').value = phone;
+    
+    if (firstName === '' || lastName === '' || dob === '' || phone === '' || gender === '') {
+        
+        speakErrorMessage('Please fill all required fields.');
+        alert('Please fill all required fields.');
+        return false; // Block form submission
+    }
+
+    if (phone.length !== 10 || isNaN(phone)) {
+        
+        speakErrorMessage('Please enter correct phone number. Exactly 10 digits.');
+        alert('Phone number must be exactly 10 digits.');
+        return false;
+    }
+
+     // If form is valid, speak the success message
+    
+    speakSuccessMessage();
+    
+     return true; // Allow form submission
+}
+    
+ // Function to speak success message
+function speakSuccessMessage() {
+    var message = "Patient Registration form Submitted Successfully";
+    var speech = new SpeechSynthesisUtterance(message);
+    speech.lang = "en-US"; // Set language
+    speech.rate = 1; // Set speed
+    speech.pitch = 1; // Set pitch
+    window.speechSynthesis.speak(speech); // Speak the message
+}   
+ 
+    // Function to speak error messages
+function speakErrorMessage(errorMessage) {
+    var speech = new SpeechSynthesisUtterance(errorMessage);
+    speech.lang = "en-US"; // Set language
+    speech.rate = 1; // Set speed
+    speech.pitch = 1; // Set pitch
+    window.speechSynthesis.speak(speech); // Speak the error message
+}
+    
+    
+    
+    
+</script>
+
+
+<div id="listeningIndicator" style="display:none; position:fixed; top:20px; right:20px; background:red; color:white; padding:10px; border-radius:50px; font-weight:bold; animation: blink 1s infinite;">
+  🎤 Listening...
+</div>
+
+<style>
+@keyframes blink {
+  0% {opacity: 1;}
+  50% {opacity: 0.3;}
+  100% {opacity: 1;}
+}
+</style>
+
+{% endblock %}

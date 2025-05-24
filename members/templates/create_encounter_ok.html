@@ -1,0 +1,37 @@
+{% extends 'master.html' %}
+{% block content %}
+<center><h2>Start Encounter for Appointment {{ appointment.id }}</h2>
+<form method="post" id="encounterForm" >
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save Encounter</button>
+</form>
+</center>
+<script>
+    document.getElementById("encounterForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+        const formData = new FormData(this);
+
+        fetch(window.location.href, {
+            method: "POST",
+            body: formData,
+            headers: {
+                "X-CSRFToken": "{{ csrf_token }}"
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert(data.message);
+                window.location.href = "{% url 'select_physician' %}";
+            } else {
+                alert("Error: " + JSON.stringify(data.errors));
+            }
+        })
+        .catch(error => console.error("Error:", error));
+    });
+</script>
+{% endblock %}
+{% block message %}
+
+{% endblock %}

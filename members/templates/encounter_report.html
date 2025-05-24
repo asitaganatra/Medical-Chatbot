@@ -1,0 +1,64 @@
+{% extends 'master.html' %}
+{% block content %}
+<center>
+<!--    <form method="get">
+        {{ form.as_p }}
+        <button type="submit">Filter</button>
+    </form> -->
+<div style="background-color:aliceblue;">
+<form method="GET" action="{% url 'encounter_report' %}">
+    <table style="width:70%;border-collapse: collapse;">
+        <tr>
+            <td style="padding: 10px;text-align: left;"><h3>Encounter Report</h3></td>
+            <td style="padding: 10px;text-align: left;"><label for="id_date"><b>Date:</b></label></td>
+            <td style="padding: 10px;text-align: left;">{{ form.date }}</td>
+
+            <td style="padding: 10px;text-align: left;"><label for="id_physician"><b>Physician:</b></label></td>
+            <td style="padding: 10px;text-align: left;">{{ form.physician }}</td>
+
+            <td style="padding: 10px;text-align: left;"><label for="id_patient"><b>Patient:</b></label></td>
+            <td style="padding: 10px;text-align: left;">{{ form.patient }}</td>
+
+            <td style="padding: 10px;text-align: left;">
+                <button type="submit">Filter</button>
+            </td>
+        </tr>
+    </table>
+</form>  
+</div>
+    <table class="blueTable" >
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Date</th>
+                <th>Patient</th>
+                <th>Physician</th>
+                <th>Findings</th>
+                <th>Prescription</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for encounter in encounters %}
+            <tr>
+                <td>{{ encounter.id }}</td>
+                <td>{{ encounter.enc_date }}</td>
+                <td>{{ encounter.enc_patient }}</td>
+                <td>{{ encounter.enc_physician }}</td>
+                <td>{{ encounter.enc_physician_finding }}</td>
+                <td>{{ encounter.enc_prescription }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="6">No encounters found.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</center>
+
+{% endblock %}
+{% block message %}
+<hr>
+<center><a href="{% url 'generate_encounter_pdf' %}" target="_blank">
+    <button>Download PDF</button>
+</a></center>
+<hr><hr><hr>
+{% endblock %}

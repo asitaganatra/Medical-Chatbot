@@ -1,0 +1,131 @@
+{% extends "master.html" %}
+<h1>List of Appointment</h1>
+{% block title %}
+<h1>Appointment List</h1>
+{% endblock %}
+{% block content %}
+<center>
+        <!-- Filter Form -->
+    <!--    <form method="GET">
+            <table style="background-color: cornflowerblue;padding-top:5px; padding-bottom:5px;color:white;width:100%;"><tr><td style="text-align:center;background-color: cornflowerblue;padding-top:5px; padding-bottom:5px;color:white;"><h3>Appointment List</h3></td>
+                <td style="background-color: cornflowerblue;padding-top:5px; padding-bottom:5px;color:white;"> 
+            <input type="text" name="physician" placeholder="Physician Name" value="{{ physician_name }}"></td><td style="background-color: cornflowerblue;padding-top:5px; padding-bottom:5px;color:white;">
+            <input type="text" name="patient" placeholder="Patient Name" value="{{ patient_name }}"></td><td style="background-color: cornflowerblue;padding-top:5px; padding-bottom:5px;color:white;">
+                <input type="date" name="date" value="{{ appointment_date }}" style="height:37px;width:200px;"></td><td style="background-color: cornflowerblue;padding-top:5px; padding-bottom:5px;color:white;">
+            <button type="submit">Filter</button>
+            <a href="{% url 'appointment_list' %}" style="text-decoration: none;">
+                <button type="button">Reset</button>
+            </a>
+                </td></tr></table>
+        </form> -->
+   <form method="GET">
+    <table ><tr><td style="text-align:center;background-color: cornflowerblue;padding-top:5px; padding-bottom:5px;color:white;width:25%;">     
+    <label for="physician">Select Physician:</label>
+    <select name="physician">
+        <option value="">-- Select --</option>
+        {% for physician in physicians %}
+            <option value="{{ physician.firstname }} {{ physician.lastname }}" {% if physician.firstname in physician_name or physician.lastname in physician_name %}selected{% endif %}>
+                {{ physician.firstname }} {{ physician.lastname }}
+            </option>
+        {% endfor %}
+        </select></td><td style="text-align:center;background-color: cornflowerblue;padding-top:5px; padding-bottom:5px;color:white;width:25%;">
+    <label for="patient">Select Patient:</label>
+    <select name="patient">
+        <option value="">-- Select --</option>
+        {% for patient in patients %}
+            <option value="{{ patient.firstname }} {{ patient.lastname }}" {% if patient.firstname in patient_name or patient.lastname in patient_name %}selected{% endif %}>
+                {{ patient.firstname }} {{ patient.lastname }}
+            </option>
+        {% endfor %}
+    </select>
+        </td><td style="text-align:center;background-color: cornflowerblue;padding-top:5px; padding-bottom:5px;color:white;width:25%;">
+    <label for="date">Select Date:</label>
+    <input style="height:40px;width:150px;" type="date" name="date" value="{{ appointment_date }}">
+        </td><td >
+    <button type="submit">Filter</button>
+        </td></tr></table>
+</form>
+    
+    
+    
+    </center>
+</div>
+<hr>
+<div>
+<center>
+       <table class="blueTable" style="width:80%">
+           <thead>
+        <tr>
+            <th style="text-align:center">ID</th>
+            <th style="text-align:center">Physician</th>
+            <th style="text-align:center">Patient</th>
+            <th style="text-align:center">Date</th>
+            <th style="text-align:center">Time</th>
+            <th style="text-align:center">Remark</th>
+            <th style="text-align:center;">Acknowledgement</th>
+            <th style="text-align:center">Delete</th>
+        </tr>
+           </thead>
+        {% for appointment in appointments %}
+        <tr>
+            <td style="text-align:center">{{ appointment.id }}</td>
+            <td>{{ appointment.physician.firstname }} {{ appointment.physician.lastname }}</td>
+            <td>{{ appointment.patient.firstname }} {{ appointment.patient.lastname }}</td>
+            <td>{{ appointment.date_of_appointment }}</td>
+            <td>{{ appointment.time_of_appointment }}</td>
+            <td>{{ appointment.remark }}</td>
+            <td >{% if appointment.encounter_status %}
+                <button disabled style="background-color: darkgreen ">Encounter Complete</button>
+                
+            {% else %}
+                <button>Acknowledge Appointment</button></td>
+            {% endif %}
+             
+                
+            <td><button class="delete-btn" data-appointment-id="{{ appointment.id }}">Delete</button></td>
+            
+        </tr>
+         {% empty %}
+            <tr>
+                <td colspan="8" style="text-align:center;">No appointments found.</td>
+            </tr>
+            
+        {% endfor %}
+    </table>
+
+    <!-- Pagination -->
+        <div class="pagination">
+            {% if appointments.has_previous %}
+                <a href="?page={{ appointments.previous_page_number }}&physician={{ physician_name }}&patient={{ patient_name }}&date={{ appointment_date }}">Previous</a>
+            {% endif %}
+
+            <span>Page {{ appointments.number }} of {{ appointments.paginator.num_pages }}</span>
+
+            {% if appointments.has_next %}
+                <a href="?page={{ appointments.next_page_number }}&physician={{ physician_name }}&patient={{ patient_name }}&date={{ appointment_date }}">Next</a>
+            {% endif %}
+        </div>
+    </center>
+</div>
+{% endblock %}
+{% block message %}
+<!-- Include the JavaScript to delete appointment on clicking Delete_Appointment Button on this page -->
+<script>
+    // Get all the delete buttons
+    const deleteButtons = document.querySelectorAll('.delete-btn');
+
+    deleteButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const appointmentId = this.getAttribute('data-appointment-id');
+            
+            // Confirm the delete action
+            const isConfirmed = confirm("Record will be deleted, permanently, are you sure? (y/n)");
+
+            if (isConfirmed) {
+                // Redirect to delete view
+                window.location.href = '/delete-appointment/' + appointmentId + '/';
+            }
+        });
+    });
+</script>
+{% endblock %}

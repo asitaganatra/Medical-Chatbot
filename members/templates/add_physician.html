@@ -1,0 +1,190 @@
+
+{% extends "master.html" %}
+
+{% block title %}
+    Register Physician.
+{% endblock %}
+
+{% block content %}
+<div style="background-color: cornflowerblue;padding-top:5px; padding-bottom:5px;color:white;">
+    <table style="width:100%;"><tr><td style="width:30%;"></td><td style="width:40%;text-align:center"><h3>Register Physician</h3></td>
+    <td style="widht:30%; text-align:center;">
+    <!-- <button><a href="/patients">List of Physician</a></button> --> </td></tr></table>
+   
+</div>
+
+<hr>
+<div style="border:3px; border-color:darkgray;padding-bottom:150px;">
+<center>
+<form action="addrecord/" method="post" onsubmit="return validateForm()">
+{% csrf_token %}
+<table class="blueTable" border='1' cellspacing='0' cellpadding='2px' style="vertical-align: middle;width:50%;">
+    <tr><td style="pading-top:5px;padding-bottom:5px;text-align:right;vertical-align: middle;width:30%;">First Name :</td><td style="pading-top:5px;padding-bottom:5px;vertical-align: middle;width:50%;"><div style="display: flex; align-items: center;"><input type="text" name="first" id="first" placeholder="Enter First Name">
+        <button type="button" onclick="startDictation('first')">🎤</button></div>
+        
+        </td></tr>
+    <tr><td style="pading-top:5px;padding-bottom:5px;text-align:right;vertical-align: middle;width:30%;">Last Name  :</td><td style="pading-top:5px;padding-bottom:5px;vertical-align: middle;width:50%;"><div style="display: flex; align-items: center;"><input type="text" name="last" id="last" placeholder="Enter Last Name">
+        <button type="button" onclick="startDictation('last')">🎤</button></div>
+        
+        </td></tr>
+    <tr><td style="pading-top:5px;padding-bottom:5px;text-align:right;vertical-align: middle;width:30%;">Joining Date (MM-DD-YYYY) : </td ><td style="pading-top:5px;padding-bottom:5px;vertical-align: middle;width:50%;"><input type="date" name="jdate" id="jdate" placeholder="YYYY-MM-DD"></td></tr>
+    <tr><td style="pading-top:5px;padding-bottom:5px;text-align:right;vertical-align: middle;width:30%;">Phone number : </td><td style="pading-top:5px;padding-bottom:5px;vertical-align: middle;width:50%;"><div style="display: flex; align-items: center;"><input type="text" name="phone" id="phone" placeholder="Enter 10 digit Phone Number"><button type="button" onclick="startDictation('phone')">🎤</button></div></td></tr>
+    <tr><td style="pading-top:5px;padding-bottom:5px;text-align:right;vertical-align: middle;width:30%;"><label for="expt">Select Physician's Specialization</label></td><td style="pading-top:5px;padding-bottom:5px;vertical-align: middle;width:50%;">
+     <select id="expt" name="expt">
+    <option value="General Physician">General Physician</option>
+    <option value="Family Medicine">Family Medicine</option>
+    <option value="Internal Medicine">Internal Medicine</option>
+    <option value="Pediatrics">Pediatrics</option>
+    <option value="Geriatrics">Geriatrics</option>
+    
+    <option value="General Surgery">General Surgery</option>
+    <option value="Orthopedic Surgery">Orthopedic Surgery</option>
+    <option value="Cardiothoracic Surgery">Cardiothoracic Surgery</option>
+    <option value="Neurosurgery">Neurosurgery</option>
+    <option value="Plastic Surgery">Plastic Surgery</option>
+    <option value="Urology">Urology</option>
+    <option value="Vascular Surgery">Vascular Surgery</option>
+    <option value="Ophthalmology">Ophthalmology (Eye Surgery)</option>
+    <option value="Otolaryngology">Otolaryngology (ENT Surgery)</option>
+    
+    <option value="Cardiology">Cardiology</option>
+    <option value="Oncology">Oncology (Cancer Specialist)</option>
+    <option value="Neurology">Neurology</option>
+    <option value="Endocrinology">Endocrinology (Diabetes & Hormones)</option>
+    <option value="Gastroenterology">Gastroenterology (Digestive System)</option>
+    <option value="Pulmonology">Pulmonology (Lungs & Respiratory)</option>
+    <option value="Nephrology">Nephrology (Kidney Specialist)</option>
+    <option value="Rheumatology">Rheumatology (Arthritis & Joints)</option>
+    <option value="Infectious Disease Specialist">Infectious Disease Specialist</option>
+    <option value="Hematology">Hematology (Blood Disorders)</option>
+    
+    <option value="Radiology">Radiology</option>
+    <option value="Pathology">Pathology</option>
+    <option value="Nuclear Medicine">Nuclear Medicine</option>
+    
+    <option value="Dermatology">Dermatology (Skin)</option>
+    <option value="Psychiatry">Psychiatry (Mental Health)</option>
+    <option value="Anesthesiology">Anesthesiology (Pain Management & Sedation)</option>
+    <option value="Allergy & Immunology">Allergy & Immunology</option>
+    <option value="Sports Medicine">Sports Medicine</option>
+    <option value="Emergency Medicine">Emergency Medicine</option>
+    <option value="Physical Medicine & Rehabilitation">Physical Medicine & Rehabilitation</option>
+    <option value="Obstetrics & Gynecology">Obstetrics & Gynecology (OB/GYN)</option>
+</select>   
+      </td></tr>
+    <tr><td style="pading-top:20px;padding-bottom:20px;text-align:right;vertical-align: middle;width:30%;">Schedule: </td><td style="pading-top:20px;padding-bottom:20px;vertical-align: middle;width:50%;"><div style="display: flex; align-items: center;"><input type="text" name="schedule" id="schedule" placeholder="From 10:30 a.m. to 12:30 p.m. All days except Sunday."><button type="button" onclick="startDictation('schedule')">🎤</button></div></td></tr>
+    <tr><td style="pading-top:20px;padding-bottom:20px;text-align:right;vertical-align: middle;width:30%;">Remark: </td><td style="pading-top:20px;padding-bottom:20px;vertical-align: middle;width:50%;"><div style="display: flex; align-items: center;"><input type="text" name="remark" id="remark" value="No remark"><button type="button" onclick="startDictation('remark')">🎤</button></div></td></tr>
+    
+    <tr><td  style="pading-top:20px;padding-bottom:20px;text-align:right;vertical-align: middle;" colspan="2"><input type="submit" value="Submit"></td></tr>
+</table>
+</form>
+    </center>
+    </div>
+
+{% endblock %}
+{% block message %}
+<script>
+function validateForm() {
+    // Get form elements
+    const first = document.getElementById('first').value.trim();
+    const last = document.getElementById('last').value.trim();
+    const jdate = document.getElementById('jdate').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const schedule=document.getElementById('schedule').value.trim();
+    const remark=document.getElementById('remark').value.trim();
+    var phone1 = document.getElementById('phone').value.trim();
+    
+    // Remove spaces from phone number
+    phone1 = phone1.replace(/\s+/g, '');
+
+    // Update the phone field with the trimmed value
+    document.getElementById('phone').value = phone1;
+    // Check if first and last names are filled
+    if (!first || !last) {speakErrorMessage('Please fill all required fields.');
+        alert('First Name and Last Name are required.');
+        return false;
+    }
+    
+    // Validate Joining Date format (YYYY-MM-DD)
+    const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+    if (!dateRegex.test(jdate)) {
+        speakErrorMessage('Please Enter Valid Date in Correct Format.');
+        alert('Please enter a valid date in YYYY-MM-DD format.');
+        return false;
+    }
+    // Convert jdate to a Date object
+    const inputDate = new Date(jdate);
+    const today = new Date();
+
+    // Set today's time to 00:00:00 to ensure a proper comparison
+    today.setHours(0, 0, 0, 0);
+    if (inputDate > today) {
+        speakErrorMessage('Please correct joining date. it can not be future date');
+        alert('Joining date cannot be in the future.');
+        return false;
+    }
+    
+        
+    
+    // Validate phone number (simple pattern for 10 digits)
+    const phoneRegex = /^[0-9]{10}$/;
+    if (!phoneRegex.test(phone)) {
+        speakErrorMessage('Please eneter correct phone number in 10 digits');
+        alert('Please enter a valid phone number with 10 digits.');
+        return false;
+    }
+    
+    if (!schedule) {
+        speakErrorMessage('Please provide schedule');
+        alert('Physician Schedule Required.');
+        return false;
+    }
+    if (!remark) {
+        speakErrorMessage('Remark Required.');
+        alert('Remark required.');
+        return false;
+    }
+    
+    
+    speakSuccessMessage();
+    return true;
+}
+    
+// 🎤 Web Speech API for voice input
+function startDictation(fieldId) {
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    recognition.onresult = function(event) {
+        document.getElementById(fieldId).value = event.results[0][0].transcript;
+    };
+
+    recognition.onerror = function(event) {
+        alert('Speech recognition error: ' + event.error);
+    };
+
+    recognition.start();
+}    
+    
+    // Function to speak success message
+function speakSuccessMessage() {
+    var message = "Physician Registration form Submitted Successfully";
+    var speech = new SpeechSynthesisUtterance(message);
+    speech.lang = "en-US"; // Set language
+    speech.rate = 1; // Set speed
+    speech.pitch = 1; // Set pitch
+    window.speechSynthesis.speak(speech); // Speak the message
+}   
+ 
+    // Function to speak error messages
+function speakErrorMessage(errorMessage) {
+    var speech = new SpeechSynthesisUtterance(errorMessage);
+    speech.lang = "en-US"; // Set language
+    speech.rate = 1; // Set speed
+    speech.pitch = 1; // Set pitch
+    window.speechSynthesis.speak(speech); // Speak the error message
+}
+</script>
+{% endblock %}

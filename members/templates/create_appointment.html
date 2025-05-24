@@ -1,0 +1,112 @@
+{% extends "master.html" %}
+<h1>New Appointment</h1>
+{% block title %}
+<h1>Patient's Appointment</h1>
+{% endblock %}
+{% block content %}
+<div style="background-color: cornflowerblue;padding-top:5px; padding-bottom:5px;color:white;">
+    <table style="width:100%;"><tr><td style="width:30%;"></td><td style="width:40%;text-align:center"><h3>New Appointment</h3></td><td style="widht:30%; text-align:center;"><button><a href="/patients">List of Patient</a></button></td></tr></table>
+   
+</div>
+<hr>
+<center>
+<div style="border:3px; border-color:darkgray;">
+<center>
+    <form method="POST" id="appointmentForm">
+        {% csrf_token %}
+<table class="blueTable" border='1' cellspacing='0' cellpadding='2px' style="vertical-align: middle;width:50%;">
+<tr><td style="pading-top:20px;padding-bottom:20px;text-align:right;vertical-align: middle;width:30%;"><label for="patient_id">Select Patient</label><br></td>
+    <td style="pading-top:20px;padding-bottom:20px;vertical-align: middle;width:50%;"><select id="patient_id" name="patient_id" required>
+            <option value="">-- Select Patient --</option>
+            {% for patient in patients %}
+            <option value="{{ patient.id }}">{{ patient.firstname }} {{patient.lastname}}</option>
+            {% endfor %}
+        </select>
+        
+    </td>
+</tr>
+<tr><td style="pading-top:20px;padding-bottom:20px;text-align:right;vertical-align: middle;width:30%;"><label for="physician_id">Select Physician</label></td>
+    <td style="pading-top:20px;padding-bottom:20px;vertical-align: middle;width:50%;"><select id="physician_id" name="physician_id" required>
+            <option value="">-- Select Physician --</option>
+            {% for physician in physicians %}
+            <option value="{{ physician.id }}">{{ physician.firstname }} {{physician.lastname}}</option>
+            {% endfor %}
+        </select>
+    </td>
+</tr>
+<tr><td style="pading-top:20px;padding-bottom:20px;text-align:right;vertical-align: middle;width:30%;"><label for="date_of_appointment">Date of Appointment</label></td>
+    <td style="pading-top:20px;padding-bottom:20px;vertical-align: middle;width:50%;"><input type="date" id="date_of_appointment" name="date_of_appointment" required>
+    </td>
+</tr>
+<tr><td style="pading-top:20px;padding-bottom:20px;text-align:right;vertical-align: middle;width:30%;"><label for="time_of_appointment">Time of Appointment</label></td>
+    <td style="pading-top:20px;padding-bottom:20px;vertical-align: middle;width:50%;"><input type="time" id="time_of_appointment" name="time_of_appointment" required>
+    </td>
+</tr>
+<tr><td style="pading-top:20px;padding-bottom:20px;text-align:right;vertical-align: middle;width:30%;"><label for="remark">Remark</label></td>
+    <td style="pading-top:20px;padding-bottom:20px;vertical-align: middle;width:50%;"><textarea id="remark" name="remark"></textarea>
+    </td>
+<tr>
+<tr><td style="pading-top:20px;padding-bottom:20px;text-align:center;vertical-align: middle;" colspan="2"><button type="submit">Create Appointment</button>
+    </td>
+</tr>    
+    </table>
+    </form></center>
+{% endblock %}
+{% block message %}
+    <script>
+document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("appointmentForm").addEventListener("submit", function (event) {
+        // Get form values
+        let patientId = document.getElementById("patient_id").value.trim();
+        let physicianId = document.getElementById("physician_id").value.trim();
+        let appointmentDate = document.getElementById("date_of_appointment").value;
+        let appointmentTime = document.getElementById("time_of_appointment").value;
+        let remark = document.getElementById("remark").value.trim();
+
+        let today = new Date();
+        today.setHours(0, 0, 0, 0); // Reset time to midnight for accurate comparison
+
+        let inputDate = new Date(appointmentDate);
+
+        // Validation checks
+        if (patientId === "") {
+            alert("Please select a patient.");
+            event.preventDefault();
+            return false;
+        }
+
+        if (physicianId === "") {
+            alert("Please select a physician.");
+            event.preventDefault();
+            return false;
+        }
+
+        if (!appointmentDate) {
+            alert("Please enter the date of the appointment.");
+            event.preventDefault();
+            return false;
+        }
+
+        if (inputDate < today) {
+            alert("Appointment date cannot be in the past.");
+            event.preventDefault();
+            return false;
+        }
+
+        if (!appointmentTime) {
+            alert("Please select a time for the appointment.");
+            event.preventDefault();
+            return false;
+        }
+
+        if (remark.length > 500) {
+            alert("Remark cannot exceed 500 characters.");
+            event.preventDefault();
+            return false;
+        }
+
+        return true; // Allow form submission if all validations pass
+    });
+});
+</script>
+{% endblock %}

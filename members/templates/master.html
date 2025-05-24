@@ -1,0 +1,119 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    .bottom_navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #333;
+    color: white;
+    padding: 10px 20px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    
+}
+
+.bottom_navbar a.left-link {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.bottom_navbar a.left-link:hover {
+    text-decoration: underline;
+}
+
+.right-text {
+    font-size: 14px;
+}
+
+/* Add the animation keyframes */
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+    
+    </style>  
+  <title>{% block title %}{% endblock %}</title>
+<link rel="stylesheet" href="{% static 'mystyles.css' %}">
+<link rel="stylesheet" href="{% static 'dropdown.css' %}">   
+</head>
+<body>
+  <div class="topnav" >
+      <table><tr width=100%><td><h2>ABC Healthcare Solution</h2></tr></table>
+      
+          
+    </div>      
+
+<div style="text-align: center;">
+<div class="dropdown">
+    <a href="/"><button class="dropbtn">Home</button></a>   
+    </div>
+  <!--  <div class="dropdown">
+      <a href="/">HOME</a>
+  </div> -->
+  
+  <div class="dropdown">
+  <button class="dropbtn">Patient</button>
+  <div class="dropdown-content">
+    <a href="/patients">Patient's List</a>
+    <a href="/add_patient">Register Patient</a>
+    <a href="/patient-report">Report</a>
+  </div></div>
+
+  <div class="dropdown">
+  <button class="dropbtn">Physician</button>
+  <div class="dropdown-content">
+    <a href="/members">Physician's List</a>
+    <a href="/add">Register Physician</a>
+    <a href="/physician-report">Report</a>
+  </div></div>
+  <div class="dropdown">
+  <button class="dropbtn">Appointment</button>
+  <div class="dropdown-content">
+    <a href="/appointments">List Appointments</a>
+    <a href="/create_appointment">Register Appointment</a>
+    <a href="/appointment-report">Appointment Report</a>
+  </div></div>
+  <div class="dropdown">
+  <button class="dropbtn">Encounter</button>
+  <div class="dropdown-content">
+    <a href="/select-physician">Start Encounter</a>
+    <a href="/encounter_report">Report</a>
+  </div></div>
+  <div class="dropdown">
+  <button class="dropbtn">Chatbot</button>
+  <div class="dropdown-content">
+    <a href="#">Activate Chatbot</a>
+    <a href="/setchatbot">Chatbot Settings</a>
+     <a href="/viewchatbotsettings">Display Chatbot Settings</a>
+      <a href="#">Close Chatbot</a>
+  </div></div>
+ <!-- <div class="dropdown">
+  <button class="dropbtn">NLP</button>
+  <div class="dropdown-content">
+    <a href="/search">NLP Chatbot</a>
+    <a href="#">Test NPL</a>
+  </div> 
+
+</div> -->
+    </div>  
+
+    <hr>
+{% block content %}
+{% endblock %}
+{% block message %}
+    
+{% endblock %}
+<div class="bottom_navbar"><a href="/">Chatbot</a>
+    <span class="right-text">&copy; {% now "Y" %} Project: Semester-VI, SIT, Nagpur, All rights reserved. </span></div>
+</body>
+</html>

@@ -1,0 +1,41 @@
+
+{% extends "master.html" %}
+{% block title %}
+
+
+
+<head>
+    <title>Train NLP Model</title>
+    
+</head>
+{% endblock %}
+
+{% block content %}
+{% csrf_token %}
+     <h2>NLP Training</h2>
+    <button onclick="startTraining()">Start Training</button>
+    <p id="status"></p>
+
+    
+{% endblock %}
+
+{% block message %}
+
+<script>
+        function startTraining() {
+            fetch('/train_nlp/')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("status").innerText = data.message;
+            });
+        }
+
+        // WebSocket connection for status updates
+        let socket = new WebSocket("ws://localhost:8000/ws/training_status/");
+
+        socket.onmessage = function(event) {
+            let data = JSON.parse(event.data);
+            document.getElementById("status").innerText = data.message;
+        };
+    </script>
+{% endblock %}

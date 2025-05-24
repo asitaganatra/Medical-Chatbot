@@ -1,0 +1,106 @@
+{% extends "master.html" %}
+{% block content %}
+
+    <div style="background-color:aliceblue; align-content: center;text-align: center;">
+    <div class="form-container">
+    <form method="GET" class="inline-form">
+        <h3>Physician Report ::</h2>
+        <label for="specialization">Filter by Specialization:</label>
+        <select name="specialization" onchange="this.form.submit()" class="short-select modern-select">
+            <option value="">All</option>
+            {% for spec in specializations %}
+                <option value="{{ spec }}" {% if spec == selected_specialization %}selected{% endif %}>{{ spec }}</option>
+            {% endfor %}
+        </select>
+    |<a href="{% url 'download_csv_physician' %}?specialization={{ selected_specialization }}">Download CSV</a>||
+    <a href="{% url 'download_pdf_physician' %}?specialization={{ selected_specialization }}">Download PDF</a>|
+    </form>
+</div>
+    </div>
+    <hr>
+<!-- <center><br>|
+<a href="{% url 'download_csv_physician' %}?specialization={{ selected_specialization }}">Download CSV</a>||
+    <a href="{% url 'download_pdf_physician' %}?specialization={{ selected_specialization }}">Download PDF</a>|</ br>
+</center> -->
+<div style="border:3px; border-color:darkgray;padding-bottom:150px;">
+<center>
+    <table class="blueTable" style="width:90%;border:1;" border="1">
+        <tr>
+            <th>ID</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Joining Date</th>
+            <th>Specialization</th>
+            <th>Schedule</th>
+            <th>Remark</th>
+        </tr>
+        {% for physician in physicians %}
+        <tr>
+            <td>{{ physician.id }}</td>
+            <td>{{ physician.firstname }}</td>
+            <td>{{ physician.lastname }}</td>
+            <td>{{ physician.joined_date }}</td>
+            <td>{{ physician.specialization }}</td>
+            <td>{{ physician.schedule }}</td>
+            <td>{{ physician.remark }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="7" style="text-align: center;">No records found</td>
+        </tr>
+        {% endfor %}
+    </table>
+    </center>
+    <hr>
+    <center>|
+    <!-- <a href="{% url 'download_csv_physician' %}?specialization={{ selected_specialization }}">Download CSV</a>||
+    <a href="{% url 'download_pdf_physician' %}?specialization={{ selected_specialization }}">Download PDF</a>|| -->
+    <a href="{% url 'main' %}">
+        <button>Return to Home</button>|
+    </a>
+    </center>
+<hr><hr>
+</div>
+{% endblock %}
+{% block message %}
+<style>
+    
+   .form-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px; /* optional: adds some space from top */
+}
+
+.inline-form {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.short-select {
+    width: 150px;
+    max-width: 200px;
+}
+
+.modern-select {
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    font-size: 14px;
+    appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg fill='%23666' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
+    background-repeat: no-repeat;
+    background-position-x: 95%;
+    background-position-y: center;
+    background-size: 20px;
+}
+
+.modern-select:hover, .modern-select:focus {
+    border-color: #007bff;
+    outline: none;
+    background-color: #fff;
+}
+    
+</style>
+{% endblock %}

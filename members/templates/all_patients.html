@@ -1,0 +1,66 @@
+{% extends "master.html" %}
+
+{% block title %}
+    Patient : List of All Patients 
+{% endblock %}
+
+{% block content %}
+<div style="background-color: cornflowerblue;padding-top:5px; padding-bottom:5px;color:white;">
+    <table style="width:100%;"><tr><td style="width:30%;"></td><td style="width:40%;text-align:center"><h3>List of Patients</h3></td><td style="widht:30%; text-align:center;">
+    <!--    <button><a href="/add_patient">Register Patient</a></button> -->
+</td></tr></table>
+   
+</div>
+<hr>
+<center>
+    <div>
+        
+    <table class="blueTable" style="width:80%">
+    <thead class="blueTable">
+    <tr>
+    <th>ID</th>
+    <th>Firstname</th>
+    <th>Lastname</th>
+    <th>Date_of_Birth</th>
+    <th>Address</th>
+    <th>Phone No. </th>
+    <th>Gender</th>
+    </tr>
+    </thead>                
+
+    <tbody>    
+     {% for x in mypatients %}
+        <tr>
+        <td onclick="window.location = 'patientdetails/{{ x.id }}'">{{ x.id }}</td>
+           <td>{{ x.firstname }}</td>
+            <td>{{x.lastname}}</td>
+            <td>{{x.dob}}</td>
+            <td>{{x.add}}</td>
+            <td>{{x.phone}}</td>
+            <td>{{x.gender}}</td>  
+        </tr>    
+      {% endfor %}
+        
+        </tbody>
+    </table>
+        <div class="pagination">
+        {% if mypatients.has_previous %}
+            <a href="?page={{ mypatients.previous_page_number }}">Previous</a>
+        {% endif %}
+
+        <span>Page {{ mypatients.number }} of {{ mypatients.paginator.num_pages }}</span>
+
+        {% if mypatients.has_next %}
+            <a href="?page={{ mypatients.next_page_number }}">Next</a>
+        {% endif %}
+    </div>
+    </div>
+</center>
+ 
+
+{% endblock %}
+{% block message %}
+<hr>
+
+<hr>
+{% endblock %}
